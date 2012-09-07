@@ -21,6 +21,7 @@ class Datatables
 	protected 	$edit_columns		= array();
 
 	public 		$columns 			= array();
+	public 		$last_columns 		= array();
 
 	protected	$count_all			= 0;
 
@@ -49,6 +50,7 @@ class Datatables
 
 	public function make()
 	{
+		$this->create_last_columns();
 		$this->init();
 		$this->get_result();
 		$this->init_columns();
@@ -192,6 +194,44 @@ class Datatables
 
 
 	/**
+	 *	Creates an array which contains published last columns in sql with their index
+	 *
+	 *	@return null
+	 */
+
+	private function create_last_columns()
+	{
+		$extra_columns_indexes = array();
+		$last_columns = array();
+		$count = 0;
+
+		foreach ($this->extra_columns as $key => $value) {
+			if($value['order'] === false) continue;
+			$extra_columns_indexes[] = $value['order'];
+		}
+
+		for ($i=0,$j=count($this->columns);$i<$j;$i++) {
+
+			if(in_array($this->getColumnName($this->columns[$i]), $this->excess_columns))
+			{ 
+				continue; 
+			}
+
+			if(in_array($count, $extra_columns_indexes))
+			{ 
+				$count++; $i--; continue; 
+			}
+
+			$temp = explode('as', $this->columns[$i]);
+			$last_columns[$count] = trim(array_shift($temp));
+			$count++;
+		}
+
+		$this->last_columns = $last_columns;
+	}
+
+
+	/**
 	 *	Parses and compiles strings by using Blade Template System
 	 *
 	 *	@return string
@@ -245,6 +285,8 @@ class Datatables
 
 				unset($last[$key]);
 				$first[$key] = $value;
+
+				$count++;
 			}
 		}
 	}
@@ -277,8 +319,8 @@ class Datatables
 			{
 				if ( Input::get('bSortable_'.intval(Input::get('iSortCol_'.$i))) == "true" )
 				{
-					if(isset($this->columns[intval(Input::get('iSortCol_'.$i))]))
-					$this->query->order_by($this->columns[intval(Input::get('iSortCol_'.$i))],Input::get('sSortDir_'.$i));
+					if(isset($this->last_columns[intval(Input::get('iSortCol_'.$i))]))
+					$this->query->order_by($this->last_columns[intval(Input::get('iSortCol_'.$i))],Input::get('sSortDir_'.$i));
 				}
 			}
 
@@ -330,6 +372,20 @@ class Datatables
 		$copy_query = $this->query;
 		$this->count_all = $copy_query->count();
 	}
+
+
+	/**
+	 *	Returns column name from <table>.<column>
+	 *	
+	 *	@return null
+	 */
+
+	private function getColumnName($str)
+	{
+		$str = explode('.', $str);
+		return array_pop($str);
+	}
+
 
 	/**
 	 *	Prints output
