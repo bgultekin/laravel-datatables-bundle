@@ -23,7 +23,6 @@ class Datatables
 	public 		$columns 			= array();
 
 	protected	$count_all			= 0;
-	protected	$count_filtered		= 0;
 
 	protected	$result_object;	
 	protected	$result_array		= array();
@@ -87,11 +86,10 @@ class Datatables
 
 	private function init()
 	{
-		$this->count_all();
+		$this->count();
 		$this->paging();
 		$this->ordering();
 		$this->filtering();
-		$this->count_filtered();
 
 	}
 
@@ -330,17 +328,7 @@ class Datatables
 	private function count()
 	{
 		$copy_query = $this->query;
-		return $copy_query->count();
-	}
-
-	private function count_all()
-	{
-		$this->count_all = $this->count();
-	}
-
-	private function count_filtered()
-	{
-		$this->count_filtered = $this->count();
+		$this->count_all = $copy_query->count();
 	}
 
 	/**
@@ -354,7 +342,7 @@ class Datatables
 		$output = array(
 			"sEcho" => intval(Input::get('sEcho')),
 			"iTotalRecords" => $this->count_all,
-			"iTotalDisplayRecords" => $this->count_filtered,
+			"iTotalDisplayRecords" => $this->count_all,
 			"aaData" => $this->result_array_r
 		);
 
