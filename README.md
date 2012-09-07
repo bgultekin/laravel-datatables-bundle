@@ -13,7 +13,11 @@ This bundle is created to handle server-side works of DataTables Jquery Plugin (
 
 ### Installation
 
-Clone the project into **bundles/datatables**.
+Install with artisan
+
+	php artisan bundle:install datatables
+
+or clone the project into **bundles/datatables**.
 
 Then, update your bundles.php to auto-start the bundle.
 
