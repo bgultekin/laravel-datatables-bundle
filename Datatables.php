@@ -344,7 +344,9 @@ class Datatables
 				{
 					if (Input::get('bSearchable_'.$i) == "true")
 					{
-						$copy_this->query->or_where($copy_this->columns[$i],'LIKE','%'.Input::get('sSearch').'%');
+						$column = explode(' as ',$copy_this->columns[$i]);
+						$column = array_shift($column);
+						$copy_this->query->or_where($column,'LIKE','%'.Input::get('sSearch').'%');
 					}
 				}
 			});
