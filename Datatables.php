@@ -211,7 +211,7 @@ class Datatables
 		}
 
 		for ($i=0,$j=count($this->columns);$i<$j;$i++) {
-
+			
 			if(in_array($this->getColumnName($this->columns[$i]), $this->excess_columns))
 			{ 
 				continue; 
@@ -312,6 +312,7 @@ class Datatables
 	private function ordering()
 	{
 		
+		
 		if(!is_null(Input::get('iSortCol_0')))
 		{
 
@@ -339,17 +340,22 @@ class Datatables
 		if (Input::get('sSearch','') != '')
 		{
 			$copy_this = $this;
+
 			$this->query->where(function($query) use ($copy_this) {
+				
 				for ($i=0;$i<count($copy_this->columns);$i++)
 				{
 					if (Input::get('bSearchable_'.$i) == "true")
-					{
+					{	
 						$column = explode(' as ',$copy_this->columns[$i]);
 						$column = array_shift($column);
-						$copy_this->query->or_where($column,'LIKE','%'.Input::get('sSearch').'%');
+						$query->or_where($column,'LIKE','%'.Input::get('sSearch').'%');
+
+						$first_time = false;
 					}
 				}
 			});
+
 		}
 		
 		
@@ -384,8 +390,18 @@ class Datatables
 
 	private function getColumnName($str)
 	{
-		$str = explode('.', $str);
-		return array_pop($str);
+		if(strpos($str,' as '))
+		{
+			$array = explode(' as ', $str);
+			return array_pop($array);
+		}
+		elseif(strpos($str,'.'))
+		{ 
+			$array = explode('.', $str);
+			return array_pop($array);
+		}
+
+		return $str;
 	}
 
 
