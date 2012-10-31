@@ -222,7 +222,7 @@ class Datatables
 				$count++; $i--; continue; 
 			}
 
-			$temp = explode('as', $this->columns[$i]);
+			$temp = explode(' as ', $this->columns[$i]);
 			$last_columns[$count] = trim(array_shift($temp));
 			$count++;
 		}
