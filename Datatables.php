@@ -350,8 +350,6 @@ class Datatables
 						$column = explode(' as ',$copy_this->columns[$i]);
 						$column = array_shift($column);
 						$query->or_where($column,'LIKE','%'.Input::get('sSearch').'%');
-
-						$first_time = false;
 					}
 				}
 			});
