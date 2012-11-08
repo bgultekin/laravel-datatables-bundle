@@ -7,7 +7,7 @@
 *
 * @package    Laravel
 * @category   Bundle
-* @version    1.0b
+* @version    1.2
 * @author     Bilal Gultekin <bilal@bilal.im>
 */
 
@@ -210,7 +210,7 @@ class Datatables
 			$extra_columns_indexes[] = $value['order'];
 		}
 
-		for ($i=0,$j=count($this->columns);$i<$j;$i++) {
+		for ($i=0,$c=count($this->columns);$i<$c;$i++) {
 			
 			if(in_array($this->getColumnName($this->columns[$i]), $this->excess_columns))
 			{ 
@@ -316,7 +316,7 @@ class Datatables
 		if(!is_null(Input::get('iSortCol_0')))
 		{
 
-			for ( $i=0 ; $i<intval(Input::get('iSortingCols')) ; $i++ )
+			for ( $i=0, $c=intval(Input::get('iSortingCols')); $i<$c ; $i++ )
 			{
 				if ( Input::get('bSortable_'.intval(Input::get('iSortCol_'.$i))) == "true" )
 				{
@@ -343,7 +343,7 @@ class Datatables
 
 			$this->query->where(function($query) use ($copy_this) {
 				
-				for ($i=0;$i<count($copy_this->columns);$i++)
+				for ($i=0,$c=count($copy_this->columns);$i<$c;$i++)
 				{
 					if (Input::get('bSearchable_'.$i) == "true")
 					{	
@@ -357,7 +357,7 @@ class Datatables
 		}
 		
 		
-		for ($i=0;$i<count($this->columns);$i++)
+		for ($i=0,$c<count($this->columns);$i<$c;$i++)
 		{
 			if (Input::get('bSearchable_'.$i) == "true" && Input::get('sSearch_'.$i) != '')
 			{
