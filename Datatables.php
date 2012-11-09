@@ -357,7 +357,7 @@ class Datatables
 		}
 		
 		
-		for ($i=0,$c<count($this->columns);$i<$c;$i++)
+		for ($i=0,$c=count($this->columns);$i<$c;$i++)
 		{
 			if (Input::get('bSearchable_'.$i) == "true" && Input::get('sSearch_'.$i) != '')
 			{
