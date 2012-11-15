@@ -418,6 +418,6 @@ class Datatables
 			"aaData" => $this->result_array_r
 		);
 
-		echo json_encode($output);
+		echo Response::json($output);
 	}
 }
