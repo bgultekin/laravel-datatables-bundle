@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
 * Laravel Datatable Bundle
@@ -25,7 +25,7 @@ class Datatables
 
 	protected	$count_all			= 0;
 
-	protected	$result_object;	
+	protected	$result_object;
 	protected	$result_array		= array();
 	protected	$result_array_r		= array();
 
@@ -81,7 +81,7 @@ class Datatables
 	}
 
 	/**
-	 *	Prepares variables according to Datatables parameters 
+	 *	Prepares variables according to Datatables parameters
 	 *
 	 *	@return null
 	 */
@@ -97,7 +97,7 @@ class Datatables
 
 
 	/**
-	 *	Adds extra columns to extra_columns 
+	 *	Adds extra columns to extra_columns
 	 *
 	 *	@return $this
 	 */
@@ -122,7 +122,7 @@ class Datatables
 
 
 	/**
-	 *	Adds excess columns to excess_columns 
+	 *	Adds excess columns to excess_columns
 	 *
 	 *	@return $this
 	 */
@@ -144,7 +144,7 @@ class Datatables
 	private function save_query($query)
 	{
 		$this->query = $query;
-		$this->query_type = get_class($query) == 'Laravel\Database\Query' ? 'fluent' : 'eloquent'; 
+		$this->query_type = get_class($query) == 'Laravel\Database\Query' ? 'fluent' : 'eloquent';
 
 		$this->columns = $this->query_type == 'eloquent' ? $this->query->table->selects : $this->query->selects;
 	}
@@ -158,12 +158,12 @@ class Datatables
 	private function init_columns()
 	{
 		foreach ($this->result_array as $rkey => &$rvalue) {
-				
+
 			foreach ($this->extra_columns as $key => $value) {
-				
+
 				$value['content'] = $this->blader($value['content'],$rvalue);
 				$rvalue = $this->include_in_array($value,$rvalue);
-				
+
 			}
 
 			foreach ($this->edit_columns as $key => $value) {
@@ -211,15 +211,15 @@ class Datatables
 		}
 
 		for ($i=0,$c=count($this->columns);$i<$c;$i++) {
-			
+
 			if(in_array($this->getColumnName($this->columns[$i]), $this->excess_columns))
-			{ 
-				continue; 
+			{
+				continue;
 			}
 
 			if(in_array($count, $extra_columns_indexes))
-			{ 
-				$count++; $i--; continue; 
+			{
+				$count++; $i--; continue;
 			}
 
 			$temp = explode(' as ', $this->columns[$i]);
@@ -275,7 +275,7 @@ class Datatables
 		else
 		{
 			$count = 0;
-			$last = $array; 
+			$last = $array;
 			$first = array();
 			foreach ($array as $key => $value) {
 				if($count == $item['order'])
@@ -311,8 +311,8 @@ class Datatables
 	 */
 	private function ordering()
 	{
-		
-		
+
+
 		if(!is_null(Input::get('iSortCol_0')))
 		{
 
@@ -336,17 +336,17 @@ class Datatables
 
 	private function filtering()
 	{
-		
+
 		if (Input::get('sSearch','') != '')
 		{
 			$copy_this = $this;
 
 			$this->query->where(function($query) use ($copy_this) {
-				
+
 				for ($i=0,$c=count($copy_this->columns);$i<$c;$i++)
 				{
 					if (Input::get('bSearchable_'.$i) == "true")
-					{	
+					{
 						$column = explode(' as ',$copy_this->columns[$i]);
 						$column = array_shift($column);
 						$query->or_where($column,'LIKE','%'.Input::get('sSearch').'%');
@@ -355,8 +355,8 @@ class Datatables
 			});
 
 		}
-		
-		
+
+
 		for ($i=0,$c=count($this->columns);$i<$c;$i++)
 		{
 			if (Input::get('bSearchable_'.$i) == "true" && Input::get('sSearch_'.$i) != '')
@@ -369,7 +369,7 @@ class Datatables
 
 	/**
 	 *	Counts current query
-	 *	
+	 *
 	 *	@return null
 	 */
 
@@ -382,7 +382,7 @@ class Datatables
 
 	/**
 	 *	Returns column name from <table>.<column>
-	 *	
+	 *
 	 *	@return null
 	 */
 
@@ -394,7 +394,7 @@ class Datatables
 			return array_pop($array);
 		}
 		elseif(strpos($str,'.'))
-		{ 
+		{
 			$array = explode('.', $str);
 			return array_pop($array);
 		}
