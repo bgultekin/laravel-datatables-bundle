@@ -418,6 +418,9 @@ class Datatables
 			"aaData" => $this->result_array_r
 		);
 
+		if(Config::get('application.profiler', false)) {
+			Log::write('$this->result_array', '<pre>'.print_r($this->result_array, true).'</pre>');
+		}
 		echo Response::json($output);
 	}
 }
