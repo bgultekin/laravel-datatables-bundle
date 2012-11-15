@@ -343,27 +343,64 @@ class Datatables
 
 			$this->query->where(function($query) use ($copy_this) {
 
+				$db_prefix = $copy_this->database_prefix();
+
 				for ($i=0,$c=count($copy_this->columns);$i<$c;$i++)
 				{
 					if (Input::get('bSearchable_'.$i) == "true")
 					{
 						$column = explode(' as ',$copy_this->columns[$i]);
 						$column = array_shift($column);
-						$query->or_where($column,'LIKE','%'.Input::get('sSearch').'%');
+						$column = $db_prefix . $column;
+						$keyword = $copy_this->wildcard_like_string(Input::get('sSearch'));
+						$query->or_where(DB::raw('LOWER('.$column.')'),'LIKE', $keyword);
 					}
 				}
 			});
 
 		}
 
+		$db_prefix = $this->database_prefix();
 
 		for ($i=0,$c=count($this->columns);$i<$c;$i++)
 		{
 			if (Input::get('bSearchable_'.$i) == "true" && Input::get('sSearch_'.$i) != '')
 			{
-				$this->query->where($this->columns[$i],'LIKE','%'.Input::get('sSearch_'.$i).'%');
+				$keyword = $copy_this->wildcard_like_string(Input::get('sSearch_'.$i));
+				$column = $db_prefix . $this->columns[$i];
+				$this->query->where(DB::raw('LOWER('.$column.')'),'LIKE', $keyword);
 			}
 		}
+	}
+
+
+	/**
+	 *  Adds % wildcards to the given string
+	 *
+	 *  @return string
+	 */
+
+	public function wildcard_like_string($str, $lowercase = true) {
+	    $wild = '%';
+	    $length = strlen($str);
+	    if($length) {
+	        for ($i=0; $i < $length; $i++) {
+	            $wild .= $str[$i].'%';
+	        }
+	    }
+	    if($lowercase) $wild = Str::lower($wild);
+	    return $wild;
+	}
+
+
+	/**
+	 *  Returns current database prefix
+	 *
+	 *  @return string
+	 */
+
+	public function database_prefix() {
+	    return Config::get('database.connections.'.Config::get('database.default').'.prefix', '');
 	}
 
 
