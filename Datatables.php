@@ -343,27 +343,82 @@ class Datatables
 
 			$this->query->where(function($query) use ($copy_this) {
 
+				$db_prefix = $copy_this->database_prefix();
+
 				for ($i=0,$c=count($copy_this->columns);$i<$c;$i++)
 				{
 					if (Input::get('bSearchable_'.$i) == "true")
 					{
 						$column = explode(' as ',$copy_this->columns[$i]);
 						$column = array_shift($column);
-						$query->or_where($column,'LIKE','%'.Input::get('sSearch').'%');
+						$keyword = '%'.Input::get('sSearch').'%';
+
+						if(Config::get('datatables.search.use_wildcards', false)) {
+							$keyword = $copy_this->wildcard_like_string(Input::get('sSearch'));
+						}
+
+						if(Config::get('datatables.search.case_insensitive', false)) {
+							$column = $db_prefix . $column;
+							$query->or_where(DB::raw('LOWER('.$column.')'), 'LIKE', $keyword);
+						} else {
+							$query->or_where($column, 'LIKE', $keyword);
+						}
 					}
 				}
 			});
 
 		}
 
+		$db_prefix = $this->database_prefix();
 
 		for ($i=0,$c=count($this->columns);$i<$c;$i++)
 		{
 			if (Input::get('bSearchable_'.$i) == "true" && Input::get('sSearch_'.$i) != '')
 			{
-				$this->query->where($this->columns[$i],'LIKE','%'.Input::get('sSearch_'.$i).'%');
+				$keyword = '%'.Input::get('sSearch_'.$i).'%';
+
+				if(Config::get('datatables.search.use_wildcards', false)) {
+					$keyword = $copy_this->wildcard_like_string(Input::get('sSearch_'.$i));
+				}
+
+				if(Config::get('datatables.search.case_insensitive', false)) {
+					$column = $db_prefix . $this->columns[$i];
+					$this->query->where(DB::raw('LOWER('.$column.')'),'LIKE', $keyword);
+				} else {
+					$this->query->where($this->columns[$i], 'LIKE', $keyword);
+				}
 			}
 		}
+	}
+
+
+	/**
+	 *  Adds % wildcards to the given string
+	 *
+	 *  @return string
+	 */
+
+	public function wildcard_like_string($str, $lowercase = true) {
+	    $wild = '%';
+	    $length = strlen($str);
+	    if($length) {
+	        for ($i=0; $i < $length; $i++) {
+	            $wild .= $str[$i].'%';
+	        }
+	    }
+	    if($lowercase) $wild = Str::lower($wild);
+	    return $wild;
+	}
+
+
+	/**
+	 *  Returns current database prefix
+	 *
+	 *  @return string
+	 */
+
+	public function database_prefix() {
+	    return Config::get('database.connections.'.Config::get('database.default').'.prefix', '');
 	}
 
 
@@ -418,6 +473,9 @@ class Datatables
 			"aaData" => $this->result_array_r
 		);
 
+		if(Config::get('application.profiler', false)) {
+			Log::write('$this->result_array', '<pre>'.print_r($this->result_array, true).'</pre>');
+		}
 		echo Response::json($output);
 	}
 }
