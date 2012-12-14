@@ -4,6 +4,11 @@
 
 This bundle is created to handle server-side works of DataTables Jquery Plugin (http://datatables.net) by using Eloquent ORM or Fluent Query Builder.
 
+### Changelog
+**1.3**
+- Make method returns output by using "Larevel Response" instead of printing (!important)
+- Bundle logs output if profiler is active
+- Some bugs are fixed
 
 ### Feature Overview
 - Supporting Eloquent ORM and Fluent Query Builder
@@ -47,7 +52,7 @@ It is better, you know these:
 
 	$posts = Post::select(array('posts.id','posts.name','posts.created_at','posts.status'));
 
-	Datatables::of($posts)->make();
+	return Datatables::of($posts)->make();
 
 
 **Example 2:**
@@ -56,7 +61,7 @@ It is better, you know these:
 					->select(array('places.id','places.name','places.created_at','owner.name as ownername','places.status'));
 
 
-	Datatables::of($place)
+	return Datatables::of($place)
 	->add_column('operations','<a href="{{ URL::to_route( \'admin.post\', array( \'edit\',$id )) }}">edit</a>
 					<a href="{{ URL::to_route( \'admin.post\', array( \'delete\',$id )) }}">delete</a>
 				')
