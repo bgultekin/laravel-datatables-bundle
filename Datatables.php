@@ -7,7 +7,7 @@
 *
 * @package    Laravel
 * @category   Bundle
-* @version    1.2
+* @version    1.3
 * @author     Bilal Gultekin <bilal@bilal.im>
 */
 
