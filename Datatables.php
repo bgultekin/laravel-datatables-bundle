@@ -56,7 +56,7 @@ class Datatables
 		$this->init_columns();
 		$this->regulate_array();
 
-		$this->output();
+		return $this->output();
 	}
 
 
@@ -476,6 +476,6 @@ class Datatables
 		if(Config::get('application.profiler', false)) {
 			Log::write('$this->result_array', '<pre>'.print_r($this->result_array, true).'</pre>');
 		}
-		echo Response::json($output);
+		return Response::json($output);
 	}
 }
