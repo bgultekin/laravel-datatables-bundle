@@ -115,7 +115,7 @@ class Datatables
 
 	public function edit_column($name,$content)
 	{
-		$this->edit_columns[] = array('name' => $name, 'content' => $content);
+		$this->edit_columns[] = array('name' => strtolower($name), 'content' => $content);
 		return $this;
 	}
 
@@ -221,7 +221,7 @@ class Datatables
 				$count++; $i--; continue;
 			}
 
-			$temp = explode(' as ', $this->columns[$i]);
+			$temp = explode(' as ', strtolower($this->columns[$i]));
 			$last_columns[$count] = trim(array_shift($temp));
 			$count++;
 		}
@@ -348,7 +348,7 @@ class Datatables
 				{
 					if (Input::get('bSearchable_'.$i) == "true")
 					{
-						$column = explode(' as ',$copy_this->columns[$i]);
+						$column = explode(' as ',strtolower($copy_this->columns[$i]));
 						$column = array_shift($column);
 						$keyword = '%'.Input::get('sSearch').'%';
 
@@ -442,6 +442,8 @@ class Datatables
 
 	private function getColumnName($str)
 	{
+		$str = strtolower($str);
+
 		if(strpos($str,' as '))
 		{
 			$array = explode(' as ', $str);
