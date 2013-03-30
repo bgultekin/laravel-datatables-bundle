@@ -159,14 +159,25 @@ class Datatables
 		foreach ($this->result_array as $rkey => &$rvalue) {
 
 			foreach ($this->extra_columns as $key => $value) {
-
-				$value['content'] = $this->blader($value['content'],$rvalue);
+				
+				if (is_string($value)):
+			            $value['content'] = $this->blader($value['content'], $rvalue);
+			        elseif (is_callable($value['content'])):
+			            $value['content'] = $value['content']($rvalue);
+			        endif;
+				
 				$rvalue = $this->include_in_array($value,$rvalue);
 
 			}
 
 			foreach ($this->edit_columns as $key => $value) {
-				$value['content'] = $this->blader($value['content'],$rvalue);
+				
+				if (is_string($value)):
+			            $value['content'] = $this->blader($value['content'], $rvalue);
+			        elseif (is_callable($value['content'])):
+			            $value['content'] = $value['content']($rvalue);
+			        endif;
+			        
 				$rvalue[$value['name']] = $value['content'];
 
 			}
