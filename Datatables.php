@@ -222,7 +222,7 @@ class Datatables
 			}
 
 			$temp = explode(' as ', strtolower($this->columns[$i]));
-			$last_columns[$count] = trim(array_shift($temp));
+			$last_columns[$count] = trim(array_pop($temp));
 			$count++;
 		}
 
