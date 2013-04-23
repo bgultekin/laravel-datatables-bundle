@@ -70,6 +70,7 @@ It is better, you know these:
 							@else 
 								Passive 
 							@endif')
+	// you can also give a function as parameter to edit_column and add_column instead of blade string
 	->edit_column('ownername','Author of this post is {{ $ownername }}')
 	->remove_column('id')
 	->make();
