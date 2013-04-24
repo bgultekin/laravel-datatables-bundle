@@ -4,6 +4,8 @@
 
 This bundle is created to handle server-side works of DataTables Jquery Plugin (http://datatables.net) by using Eloquent ORM or Fluent Query Builder.
 
+*Info:* There is also [Laravel 4 Datatables Package](https://github.com/bllim/laravel4-datatables-package)
+
 ### Changelog
 **1.3**
 - Make method returns output by using "Larevel Response" instead of printing (!important)
