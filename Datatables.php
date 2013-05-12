@@ -439,8 +439,7 @@ class Datatables
 
 	private function count()
 	{
-		$copy_query = $this->query;
-		$this->count_all = $copy_query->count();
+		$this->count_all = $this->query->count();
 	}
 
 
