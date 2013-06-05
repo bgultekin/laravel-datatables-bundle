@@ -48,8 +48,9 @@ class Datatables
 	 *	@return null
 	 */
 
-	public function make()
+	public function make($mDataSupport=false)
 	{
+		$this->mDataSupport = $mDataSupport;
 		$this->create_last_columns();
 		$this->init();
 		$this->get_result();
@@ -192,12 +193,17 @@ class Datatables
 
 	private function regulate_array()
 	{
-		foreach ($this->result_array as $key => $value) {
-			foreach ($this->excess_columns as $evalue) {
-				unset($value[$evalue]);
-			}
 
-			$this->result_array_r[] = array_values($value);
+		if($this->mDataSupport){
+	      $this->result_array_r = $this->result_array;
+	    }else{
+			foreach ($this->result_array as $key => $value) {
+				foreach ($this->excess_columns as $evalue) {
+					unset($value[$evalue]);
+				}
+
+				$this->result_array_r[] = array_values($value);
+			}
 		}
 	}
 
